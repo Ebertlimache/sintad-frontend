@@ -1,0 +1,76 @@
+.table-responsive {
+  max-height: 300px;
+  overflow-y: auto;
+  height: 300px;
+}
+
+.pagination-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    max-height: 950px;
+    height: 950px;
+    margin-bottom: 10vh;
+    max-width: 300px;
+  }
+
+  .pagination-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    padding: 0.5rem 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (min-width: 769px) {
+  .btn-spacing {
+    margin-right: 10px;
+  }
+}
+
+.json-container {
+  max-height: 60vh;
+  width: 80vw;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .json-container {
+    max-height: 60vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .json-container {
+    max-height: 60vh;
+  }
+}
+
+.my-pagination ::ng-deep .ngx-pagination .current {
+  background: #ee2e24 !important;
+}
+
+.custom-spacing {
+  margin-right: 10px;
+}
+
+.input-group-append .custom-spacing:last-child {
+  margin-right: 0;
+}
+
+.form-check-input:checked {
+  background-color: #ee2e24;
+  border-color: #ee2e24;
+}

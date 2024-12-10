@@ -1,0 +1,112 @@
+<div class="container-fluid">
+  <h2 class="mb-4 text-center">Tipos de Contribuyentes</h2>
+
+  <div class="mb-4 d-flex justify-content-center" *ngIf="!mostrarDetalles">
+    <div class="input-group mb-3">
+      <input type="number" class="form-control custom-spacing" [(ngModel)]="nuevoIdTipoContribuyente"
+        placeholder="Ingrese el ID" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary custom-spacing" (click)="searchTipoContribuyenteById()">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+        <button class="btn btn-outline-secondary custom-spacing" (click)="openModal(agregarTipoContribuyenteModal)">
+          <i class="fas fa-plus"></i> Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarDetalles" class="mb-4">
+    <h3 class="mb-3">Detalles del Tipo de Contribuyente #{{ tipoContribuyenteCompleto?.idTipoContribuyente }}</h3>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>JSON</span>
+        <button class="btn btn-outline-secondary mt-3" (click)="mostrarDetalles = false">
+          <i class="fas fa-arrow-left"></i> Atrás
+        </button>
+      </div>
+      <div class="card-body json-container">
+        <pre class="bg-light p-3 rounded"><code>{{ tipoContribuyenteCompleto | json }}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!mostrarDetalles">
+    <h3 class="mb-3">Lista de Tipos de Contribuyentes</h3>
+    <div class="container mt-5">
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-striped text-center">
+          <thead>
+            <tr>
+              <th>ID Tipo C.</th>
+              <th>Nombre</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tipoContribuyente of tipoContribuyentes | paginate: { itemsPerPage: 5, currentPage: page }">
+              <td>{{ tipoContribuyente.idTipoContribuyente }}</td>
+              <td>{{ tipoContribuyente.nombre }}</td>
+              <td>{{ tipoContribuyente.estado }}</td>
+              <td>
+                <button class="btn btn-outline-dark btn-sm mr-2 btn-spacing"
+                  (click)="mostrarDetalles = true; detailsTipoContribuyente(tipoContribuyente)">
+                  <i class="fas fa-info-circle"></i> Detalles
+                </button>
+                <button class="btn btn-outline-danger btn-sm"
+                  (click)="deleteTipoContribuyente(tipoContribuyente.idTipoContribuyente)">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+      <pagination-controls class="my-pagination" (pageChange)="page = $event"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<ng-template #agregarTipoContribuyenteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Agregar Tipo Contribuyente</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form #tipoContribuyenteForm="ngForm">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="nuevoTipoContribuyente.nombre" #nombre="ngModel" required>
+        <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="text-danger">
+          El nombre es requerido.
+        </div>
+      </div>
+      <div class="mb-3 form-check">
+        <label class="form-check-label" for="estado">Estado</label>
+        <input type="checkbox" class="form-check-input" id="estado" name="estado"
+          [(ngModel)]="nuevoTipoContribuyente.estado">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">Cerrar</button>
+    <button type="button" class="btn btn-danger" [disabled]="tipoContribuyenteForm.invalid"
+      (click)="createTipoContribuyente(); modal.close('Save click')">Guardar</button>
+  </div>
+</ng-template>
+
+<ng-template #tipoContribuyenteNoEncontradaModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Error</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Tipo Contribuyente no encontrado. Intente con otro ID.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+  </div>
+</ng-template>

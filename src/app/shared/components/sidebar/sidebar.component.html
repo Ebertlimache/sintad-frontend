@@ -1,0 +1,15 @@
+<button class="menu-button" (click)="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<div class="sidebar-container" [class.open]="isSidebarOpen">
+  <div class="logo-container mt-2">
+    <img src="assets/logo.png" alt="Logo de la empresa" class="company-logo">
+  </div>
+  <ul class="nav-list">
+    <li><a class="nav-list-item" [ngClass]="{'active': isActive('/inicio')}" href="/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+    <li><a class="nav-list-item" [ngClass]="{'active': isActive('/entidad')}" href="/entidad"><i class="fas fa-building"></i> Entidades</a></li>
+    <li><a class="nav-list-item" [ngClass]="{'active': isActive('/tipo-contribuyente')}" href="/tipo-contribuyente"><i class="fas fa-user-tie"></i> Tipo Contribuyente</a></li>
+    <li><a class="nav-list-item" [ngClass]="{'active': isActive('/tipo-documento')}" href="/tipo-documento"><i class="fas fa-file-alt"></i> Tipo Documento</a></li>
+  </ul>
+  <button class="logout-button" (click)="logout()">
+    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+  </button>
+</div>

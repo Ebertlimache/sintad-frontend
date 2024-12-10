@@ -1,0 +1,167 @@
+<div class="container-fluid">
+  <h2 class="mb-4 text-center">Entidades</h2>
+
+  <div class="mb-4 d-flex justify-content-center" *ngIf="!mostrarDetalles">
+    <div class="input-group mb-3">
+      <input type="number" class="form-control custom-spacing" [(ngModel)]="nuevoIdEntidad"
+        placeholder="Ingrese el ID" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary custom-spacing" (click)="searchEntidadById()">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+        <button class="btn btn-outline-secondary custom-spacing" (click)="openModal(agregarEntidadModal)">
+          <i class="fas fa-plus"></i> Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarDetalles" class="mb-4">
+    <h3 class="mb-3">Detalles de la Entidad #{{ entidadCompleta.idEntidad }}</h3>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>JSON</span>
+        <button class="btn btn-outline-secondary mt-3" (click)="mostrarDetalles = false">
+          <i class="fas fa-arrow-left"></i> Atrás
+        </button>
+
+      </div>
+      <div class="card-body json-container">
+        <pre class="bg-light p-3 rounded"><code>{{ entidadCompleta | json }}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!mostrarDetalles">
+    <h3 class="mb-3">Lista de Entidades</h3>
+    <div class="container mt-5">
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-striped text-center">
+          <thead>
+            <tr>
+              <th>ID Entidad</th>
+              <th>Razón Social</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entidad of entidades | paginate: { itemsPerPage: 5, currentPage: page }">
+              <td>{{ entidad.idEntidad }}</td>
+              <td>{{ entidad.razonSocial }}</td>
+              <td>{{ entidad.estado }}</td>
+              <td>
+                <button class="btn btn-outline-dark btn-sm mr-2 btn-spacing"
+                  (click)="mostrarDetalles = true; detailsEntidad(entidad)">
+                  <i class="fas fa-info-circle"></i> Detalles
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteEntidad(entidad.idEntidad)">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+      <pagination-controls class="my-pagination" (pageChange)="page = $event"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<ng-template #agregarEntidadModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Agregar Entidad</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form #entidadForm="ngForm">
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+          <label for="tipoDocumento" class="form-label">Tipo de Documento:</label>
+          <select class="form-control" id="tipoDocumento" [(ngModel)]="nuevaEntidad.tipoDocumento.idTipoDocumento"
+            name="tipoDocumento" #tipoDocumento="ngModel" required>
+            <option value="" disabled selected>Seleccione un tipo de documento</option>
+            <option *ngFor="let doc of tiposDocumento" [value]="doc.idTipoDocumento">{{ doc.nombre }}</option>
+          </select>
+          <div *ngIf="tipoDocumento?.invalid && (tipoDocumento?.dirty || tipoDocumento?.touched)" class="text-danger">
+            El tipo de documento es requerido.
+          </div>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+          <label for="tipoContribuyente" class="form-label">Tipo de Contribuyente:</label>
+          <select class="form-control" id="tipoContribuyente"
+            [(ngModel)]="nuevaEntidad.tipoContribuyente.idTipoContribuyente" name="tipoContribuyente"
+            #tipoContribuyente="ngModel" required>
+            <option value="" disabled selected>Seleccione un tipo de contribuyente</option>
+            <option *ngFor="let contribuyente of tiposContribuyente" [value]="contribuyente.idTipoContribuyente">{{
+              contribuyente.nombre }}</option>
+          </select>
+          <div *ngIf="tipoContribuyente?.invalid && (tipoContribuyente?.dirty || tipoContribuyente?.touched)"
+            class="text-danger">
+            El tipo de contribuyente es requerido.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+          <label for="nroDocumento" class="form-label">Número de Documento:</label>
+          <input type="text" class="form-control" id="nroDocumento" [(ngModel)]="nuevaEntidad.nroDocumento"
+            name="nroDocumento" #nroDocumento="ngModel" required>
+          <div *ngIf="nroDocumento?.invalid && (nroDocumento?.dirty || nroDocumento?.touched)" class="text-danger">
+            El numero de documento es requerido.
+          </div>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+          <label for="razonSocial" class="form-label">Razón Social:</label>
+          <input type="text" class="form-control" id="razonSocial" [(ngModel)]="nuevaEntidad.razonSocial"
+            name="razonSocial" #razonSocial="ngModel" required>
+          <div *ngIf="razonSocial?.invalid && (razonSocial?.dirty || razonSocial?.touched)" class="text-danger">
+            La razon social es requerida.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+          <label for="nombreComercial" class="form-label">Nombre Comercial:</label>
+          <input type="text" class="form-control" id="nombreComercial" [(ngModel)]="nuevaEntidad.nombreComercial"
+            name="nombreComercial">
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+          <label for="direccion" class="form-label">Dirección:</label>
+          <input type="text" class="form-control" id="direccion" [(ngModel)]="nuevaEntidad.direccion" name="direccion">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+          <label for="telefono" class="form-label">Teléfono:</label>
+          <input type="text" class="form-control" id="telefono" [(ngModel)]="nuevaEntidad.telefono" name="telefono">
+        </div>
+        <div class="col-12 col-md-6 mb-3 px-5 form-check">
+          <input type="checkbox" class="form-check-input text-danger" id="estado" [(ngModel)]="nuevaEntidad.estado"
+            name="estado">
+          <label class="form-check-label" for="estado">Estado</label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">Cerrar</button>
+    <button type="button" class="btn btn-danger" [disabled]="entidadForm.invalid"
+      (click)="createEntidad(); modal.close('Save click')">Guardar</button>
+  </div>
+</ng-template>
+
+<ng-template #entidadNoEncontradaModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Error</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Entidad no encontrada. Intente con otro ID.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+  </div>
+</ng-template>
